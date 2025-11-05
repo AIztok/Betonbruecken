@@ -40,8 +40,8 @@ Unterbau Aufgehendes:
 |                         Federn Fundament | WL01  | 1                   |
 |                   Kopplung zu den Lagern | WL01  | 1                   |
 |                             Federn Lager | WL01  | 19                  |
-|                         Federn Fundament | ST02  | 202                 |
-| Kopplung Federn Fundament zu den Stützen | ST02  | 311                 |
+|                         Federn Fundament | ST02  | 2                   |
+| Kopplung Federn Fundament zu den Stützen | ST02  | 2                   |
 |                                  Stützen | ST02  | 21 (West), 22 (Ost) |
 |                         Federn Fundament | WL03  | 3                   |
 |                   Kopplung zu den Lagern | WL03  | 3                   |
