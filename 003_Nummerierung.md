@@ -59,9 +59,6 @@ Unterbau Aufgehendes:
 |                  Endquerträger WL03 |     BA2      | 331        |
 |                      Fahrbahnplatte |     BA1      | 401        |
 |                      Fahrbahnplatte |     BA2      | 402        |
-| Kopplung Überbaustab zu Lagern WL01 |     BA1      | 110        |
-|        Kopplung Überbaustab zu ST02 |     BA1      | 120        |
-| Kopplung Überbaustab zu Lagern WL03 |     BA2      | 130        |
 
 # Lastfälle
 
