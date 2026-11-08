@@ -142,11 +142,114 @@ end
 head Wind
 
 LC NO 221 TYPE W TITL 'Wind +Y'
-    line sln 1005       type py p1 -1.5*1.1 x1 sx 0 p2 -1.5*1.5 x2 sx 1
-    line sln 1005       type mx p1 1.5*1.1^2/2 x1 s 0[-] p2 1.5*1.5^2/2 x2 s 1[-]
-    line sln 1009,1013  type py p1 -1.5*1.1 x1 sx 0 p2 -1.5*1.5 x2 sx 1
-    line sln 1009,1013  type mx p1 1.5*1.1^2/2 x1 s 0[-] p2 1.5*1.5^2/2 x2 s 1[-]
+    line sln 1005  type py p1 -1.5*1.1      x1 s 0[-] p2 -1.5*1.5       x2 s 1[-]
+    line sln 1005  type mx p1  1.5*1.1^2/2  x1 s 0[-] p2  1.5*1.5^2/2   x2 s 1[-]
+    line sln 1009  type py p1 -1.5*1.5      x1 s 0[-] p2 -1.5*1.4       x2 s 1[-]
+    line sln 1009  type mx p1  1.5*1.5^2/2  x1 s 0[-] p2  1.5*1.4^2/2   x2 s 1[-]
+    line sln 1013  type py p1 -1.5*1.4      x1 s 0[-] p2 -1.5*1.1       x2 s 1[-]
+    line sln 1013  type mx p1  1.5*1.4^2/2  x1 s 0[-] p2  1.5*1.1^2/2   x2 s 1[-]
+     
 
 end      
 ```
+
+# Berechnung
+
+## Berechnung Einzellastfälle
+```
++prog ase
+head Berechnung
+
+#define Calc_param
+syst prob line
+grp -
+grp2 401,402 quea 0.001 qemx 0.001
+#enddef
+
+#include Calc_param
+
+lc all
+
+end
+```
+
+## Berechnung Straßenverkehrslasten mittels ELLA GUI
+Task `Verkehrslasten` einfügen.
+
+## Berechnung Eisenbahnlasten mittels ELLA Teddy Eingabe
+Lastenzüge für Eisenbahnlasten können auch mittels ELLA berechnet werden, jedoch nur über die textuelle Eingabe.
+
+**Wird noch ergänzt**
+
+# Bauphasen
+
+```
+
++prog csm urs:37.1
+head Bauphasen
+
+CTRL CANT 2 ! neue segmente tangential zu vorherigen ergänzen
+
+ctrl beam aqb ! kriechen und schwinden über AQB Modul berechnet
+ctrl crep rcre ! kriechwert für jede Bauphase neu berechnet
+ctrl relz auto ! relaxation von Spannstahl berücksichtigt
+ctrl emod auto ! E-Modulus ist Zeitabhängig
+
+ctrl ase text 'ctrl warn 43'
+ctrl ase2 text 'GRP2 401,402 quea 0.001 qemx 0.001'
+
+CS 10   TYPE G_1    TITL 'Unterbau'
+CS 15   TYPE C_1    TITL 'K+S 28d' T 28 RH 80 ncre 3
+
+CS 19   TYPE B      TITL 'Überbau BA1 aktiviert'
+CS 20   TYPE G_1    TITL 'Überbau BA1 Gewicht'
+
+CS 21   TYPE P      TITL 'Vorspannung BA1'
+CS 25   TYPE C_1    TITL 'K+S 21d' T 21 RH 80 ncre 2
+
+CS 29   TYPE B      TITL 'Überbau BA2 aktiviert'
+CS 30   TYPE G_1    TITL 'Überbau BA2 Gewicht'
+
+CS 31   TYPE P      TITL 'Vorspannung BA2'
+CS 35   TYPE C_1    TITL 'K+S 21d' T 21 RH 80 ncre 2
+
+CS 100  TYPE G_2  TITL 'G_2 Aufbau'
+CS 105  TYPE C_1  TITL 'K+S bis Verkehrsöffnung'  T 100               RH 80 ncre 3
+CS 115  TYPE C_2  TITL 'K+S bis unendlich'        T 365*70-21-21-100  RH 80 ncre 5
+
+GRP    NO                 ICS1  ICSD    ATIL   QEMX   QUEA    T0  TITL PHIF=0.00
+       -                  10    10      -     -      -       28  'Fundierung'
+       1                  10    10      -     -      -       28  'WL01'
+       2                  10    10      -     -      -       28  'ST02'
+       3                  10    10      -     -      -       28  'WL03'
+       19                 19    20      -     -      -       28  'WL01 Lager'
+       21,22              10    10      -     -      -       28  'ST02'
+       30,31              10    10      -     -      -       28  'WL03'
+       39                 29    30      -     -      -       28  'WL03 Lager'
+       101,201,401        19    20      -     -      -       14  'Überbau BA1'
+       102,202,402        29    30      -     -      -       14  'Überbau BA2'
+
+LC    NO     TYPE  ICS1 ATIL
+       3     G_2    100   -      $ Randbalken
+       4     G_2    100   -      $ Geländer
+       5     G_2    100   -      $ Asphalt
+
+
+CAMB CS 119
+
+end
+
+$ Dann die datei $(NAME)_csm.dat laufen lassen
+$ Start file $(NAME)_csm.dat
+$ Wird hier automatisch über +apply erledigt
++apply $(NAME)_csm.dat   
+
+```
+
+# Einwirkungskombinationen
+Einfügen Task `CSM Bridge Design - Überlagerungen`
+
+# Bemessung
+Einfügen Task `CSM Bridge Design - Stäbe`
+Einfügen Task `CSM Bridge Design - Flächenelemente`
 
